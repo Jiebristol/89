@@ -5,17 +5,6 @@
   <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
   <script type='text/javascript' src='https://raw.githack.com/AR-js-org/AR.js/master/three.js/build/ar-threex-location-only.js'></script>
   <script type='text/javascript' src='https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js'></script>
-  <script type='text/javascript'>
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        console.log("dangqian：", position.coords.latitude, position.coords.longitude);
-      }, function(error) {
-        console.error("shibai：", error);
-      });
-    } else {
-      console.log("buzhichi");
-    }
-  </script>
 </head>
 <body>
 <a-scene vr-mode-ui='enabled: false' arjs='sourceType: webcam; videoTexture: true; debugUIEnabled: false' renderer='antialias: true; alpha: true'>
