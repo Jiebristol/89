@@ -11,15 +11,16 @@
   <style>
     #myButton {
       position: absolute;
-      top: 20px;
-      left: 20px;
+      bottom: 20px; /* Position 20px from the bottom */
+      left: 50%; /* Center horizontally */
+      transform: translateX(-50%); /* Adjust position to center */
       padding: 10px 20px;
       background-color: blue;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      z-index: 1;
+      z-index: 1; /* Make sure the button is on top of the AR scene */
     }
   </style>
 </head>
