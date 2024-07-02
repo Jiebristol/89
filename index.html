@@ -8,6 +8,8 @@
   <script type="text/javascript">
     var latitude;
     var longitude;
+    let clickCount = 0;
+    const maxClicks = 3;
     function getLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition);
@@ -21,13 +23,16 @@
 
     }
     function PlanTree(){
-      getLocation();
-      const scene = document.querySelector('a-scene');
-      const newEntity = document.createElement('a-entity');
-      newEntity.setAttribute('material', 'color: green');
-      newEntity.setAttribute('geometry', 'primitive: cone; radiusBottom: 1; radiusTop: 0; height: 2');
-      newEntity.setAttribute('gps-new-entity-place', `latitude: ${latitude}; longitude: ${longitude}`);
-      scene.appendChild(newEntity);
+      clickCount++;
+      if (clickCount < maxClicks) {
+        getLocation();
+        const scene = document.querySelector('a-scene');
+        const newEntity = document.createElement('a-entity');
+        newEntity.setAttribute('material', 'color: green');
+        newEntity.setAttribute('geometry', 'primitive: cone; radiusBottom: 1; radiusTop: 0; height: 2');
+        newEntity.setAttribute('gps-new-entity-place', `latitude: ${latitude}; longitude: ${longitude}`);
+        scene.appendChild(newEntity);
+      }
     }
   </script>
   <style>
