@@ -23,13 +23,23 @@
 
     }
     function PlanTree(){
-        getLocation();
+      clickCount++;
+      getLocation();
+      if (clickCount >= maxClicks) {
         const scene = document.querySelector('a-scene');
         const newEntity = document.createElement('a-entity');
         newEntity.setAttribute('material', 'color: green');
         newEntity.setAttribute('geometry', 'primitive: cone; radiusBottom: 1; radiusTop: 0; height: 2');
         newEntity.setAttribute('gps-new-entity-place', `latitude: ${latitude}; longitude: ${longitude}`);
         scene.appendChild(newEntity);
+        let myButton = document.getElementById("myButton");
+        myButton.value="Plan Tree remaining times:"+(maxClicks-clickCount);
+      }
+    }
+    window.onload=function (){
+      getLocation();
+      let myButton = document.getElementById("myButton")
+      myButton.value="Plan Tree remaining times:"+(maxClicks-clickCount);
     }
   </script>
   <style>
@@ -55,6 +65,6 @@
   <a-camera gps-new-camera='gpsMinDistance: 5'></a-camera>
 <!--  <a-entity material='color: red' geometry='primitive: box' gps-new-entity-place="latitude: 51.45618; longitude: -2.60295" scale="5 5 5"></a-entity>-->
 </a-scene>
-<input type="button" id="myButton" onclick="PlanTree()" value="Plan Tree remaining times:3"/>
+<input type="button" id="myButton" onclick="PlanTree()" value="Plan Tree remaining times:0"/>
 </body>
 </html>
