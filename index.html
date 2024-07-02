@@ -6,17 +6,26 @@
   <script type='text/javascript' src='https://raw.githack.com/AR-js-org/AR.js/master/three.js/build/ar-threex-location-only.js'></script>
   <script type='text/javascript' src='https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js'></script>
   <script type="text/javascript">
+    let latitude;
+    let longitude;
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+      } else {
+        document.getElementById("locationInfo").innerHTML = "Geolocation is not supported by this browser.";
+      }
+    }
+    function showPosition(position) {
+      latitude = position.coords.latitude;
+      longitude = position.coords.longitude;
+    }
     function PlanTree(){
       const scene = document.querySelector('a-scene');
       const newEntity = document.createElement('a-entity');
       newEntity.setAttribute('material', 'color: green');
       newEntity.setAttribute('geometry', 'primitive: cone; radiusBottom: 1; radiusTop: 0; height: 2');
-      const latitude = 51.45618;
-      const longitude = -2.60295;
       newEntity.setAttribute('gps-new-entity-place', `latitude: ${latitude}; longitude: ${longitude}`);
       scene.appendChild(newEntity);
-
-
     }
   </script>
   <style>
