@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>AR.js A-Frame Location-based</title>
   <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
@@ -18,8 +18,11 @@
     function showPosition(position) {
       latitude = position.coords.latitude;
       longitude = position.coords.longitude;
+      console.log(latitude + longitude)
+
     }
     function PlanTree(){
+      getLocation();
       const scene = document.querySelector('a-scene');
       const newEntity = document.createElement('a-entity');
       newEntity.setAttribute('material', 'color: green');
