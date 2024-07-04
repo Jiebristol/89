@@ -8,7 +8,7 @@
   <script type="text/javascript">
     var latitude;
     var longitude;
-    let avClicks = 3;
+    let avClicks = 1;
     function getLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition);
@@ -25,14 +25,16 @@
       getLocation();
       if (avClicks!==0) {
         avClicks--;
-        const scene = document.querySelector('a-scene');
-        const newEntity = document.createElement('a-entity');
-        newEntity.setAttribute('material', 'color: green');
-        newEntity.setAttribute('geometry', 'primitive: cone; radiusBottom: 1; radiusTop: 0; height: 2');
-        newEntity.setAttribute('gps-new-entity-place', `latitude: ${latitude+0.00001}; longitude: ${longitude+0.00001}`);
-        scene.appendChild(newEntity);
-        let myButton = document.getElementById("myButton");
-        myButton.value="Plan Tree remaining times:"+avClicks;
+        for (let i = 0; i < 1000; i++) {
+          const scene = document.querySelector('a-scene');
+          const newEntity = document.createElement('a-entity');
+          newEntity.setAttribute('material', 'color: green');
+          newEntity.setAttribute('geometry', 'primitive: cone; radiusBottom: 1; radiusTop: 0; height: 2');
+          newEntity.setAttribute('gps-new-entity-place', `latitude: ${latitude+0.00001*i}; longitude: ${longitude+0.00001*i}`);
+          scene.appendChild(newEntity);
+          let myButton = document.getElementById("myButton");
+          myButton.value="Plan Tree remaining times:"+avClicks;
+        }
       }
       if(avClicks===0){
         let myButton = document.getElementById("myButton");
