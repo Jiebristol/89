@@ -10,6 +10,7 @@
     var longitude;
     let avClicks = 3;
 
+    // 获取当前位置的函数
     function getLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition);
@@ -18,77 +19,78 @@
       }
     }
 
+    // 显示当前位置的函数
     function showPosition(position) {
       latitude = position.coords.latitude;
       longitude = position.coords.longitude;
     }
 
+    // 计算新坐标的函数，基于当前经纬度、距离和角度
     function calculateNewCoordinates(lat, lon, distance, angle) {
-      // Convert latitude and longitude from degrees to radians
+      // 将纬度和经度从度数转换为弧度
       let latRad = lat * Math.PI / 180;
       let lonRad = lon * Math.PI / 180;
 
-      // Earth radius in meters
+      // 地球半径，单位为米
       let R = 6378137;
 
-      // Calculate the new latitude
+      // 计算新的纬度
       let newLat = Math.asin(Math.sin(latRad) * Math.cos(distance / R) + Math.cos(latRad) * Math.sin(distance / R) * Math.cos(angle));
 
-      // Calculate the new longitude
+      // 计算新的经度
       let newLon = lonRad + Math.atan2(Math.sin(angle) * Math.sin(distance / R) * Math.cos(latRad), Math.cos(distance / R) - Math.sin(latRad) * Math.sin(newLat));
 
-      // Convert the new latitude and longitude from radians to degrees
+      // 将新的纬度和经度从弧度转换为度数
       newLat = newLat * 180 / Math.PI;
       newLon = newLon * 180 / Math.PI;
 
       return {latitude: newLat, longitude: newLon};
     }
 
+    // 种树的函数
     function PlanTree() {
-      getLocation();
+      getLocation();  // 获取当前位置
       if (avClicks !== 0) {
         avClicks--;
-        const scene = document.querySelector('a-scene');
-        const newEntity = document.createElement('a-entity');
-        newEntity.setAttribute('material', 'color: green');
-        newEntity.setAttribute('geometry', 'primitive: cone; radiusBottom: 1; radiusTop: 0; height: 2');
+        const scene = document.querySelector('a-scene');  // 获取场景元素
+        const newEntity = document.createElement('a-entity');  // 创建一个新的3D实体
+        newEntity.setAttribute('material', 'color: green');  // 设置材质颜色为绿色
+        newEntity.setAttribute('geometry', 'primitive: cone; radiusBottom: 1; radiusTop: 0; height: 2');  // 设置几何形状为圆锥
 
-        // Get the camera direction
+        // 获取摄像机方向
         const camera = document.querySelector('a-camera');
         const rotation = camera.object3D.rotation;
 
-        // Calculate the angle in radians
-        let angle = rotation.y;
+        // 计算摄像机朝向角度（以弧度表示）
+        let angleRad = rotation.y;
 
-        // Convert angle from radians to degrees
-        angle = angle * (180 / Math.PI);
-
-        // Calculate the new coordinates (1 meter ahead of the camera)
-        const newCoords = calculateNewCoordinates(latitude, longitude, 1, angle);
-        newEntity.setAttribute('gps-new-entity-place', `latitude: ${newCoords.latitude}; longitude: ${newCoords.longitude}`);
-        scene.appendChild(newEntity);
+        // 计算前方1米的新坐标
+        const newCoords = calculateNewCoordinates(latitude, longitude, 1, angleRad);
+        newEntity.setAttribute('gps-new-entity-place', `latitude: ${newCoords.latitude}; longitude: ${newCoords.longitude}`);  // 设置新的GPS位置
+        scene.appendChild(newEntity);  // 将新实体添加到场景中
 
         let myButton = document.getElementById("myButton");
-        myButton.value = "Plan Tree remaining times:" + avClicks;
+        myButton.value = "Plan Tree remaining times:" + avClicks;  // 更新按钮文本
       }
       if (avClicks === 0) {
         let myButton = document.getElementById("myButton");
-        myButton.style.backgroundColor = 'grey';
+        myButton.style.backgroundColor = 'grey';  // 设置按钮背景颜色为灰色
       }
     }
 
+    // 页面加载时调用的函数
     window.onload = function () {
-      getLocation();
+      getLocation();  // 获取当前位置
       let myButton = document.getElementById("myButton");
-      myButton.value = "Plan Tree remaining times:" + avClicks;
+      myButton.value = "Plan Tree remaining times:" + avClicks;  // 初始化按钮文本
     }
   </script>
   <style>
     #myButton {
       position: absolute;
-      bottom: 20px; /* Position 20px from the bottom */
-      left: 50%; /* Center horizontally */
-      transform: translateX(-50%); /* Adjust position to center */
+      bottom: 20px; /* 距离底部20px */
+      left: 50%; /* 水平居中 */
+      transform: translateX(-50%); /* 调整位置使其居中 */
       padding: 15px 30px;
       font-size: 18px;
       background-color: green;
@@ -96,7 +98,7 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      z-index: 1; /* Make sure the button is on top of the AR scene */
+      z-index: 1; /* 确保按钮在AR场景的上方 */
     }
   </style>
 </head>
