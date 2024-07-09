@@ -9,6 +9,7 @@
     var latitude;
     var longitude;
     let avClicks = 3;
+
     function getLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition);
@@ -16,33 +17,70 @@
         document.getElementById("locationInfo").innerHTML = "Geolocation is not supported by this browser.";
       }
     }
+
     function showPosition(position) {
       latitude = position.coords.latitude;
       longitude = position.coords.longitude;
-
     }
-    function PlanTree(){
+
+    function calculateNewCoordinates(lat, lon, distance, angle) {
+      // Convert latitude and longitude from degrees to radians
+      let latRad = lat * Math.PI / 180;
+      let lonRad = lon * Math.PI / 180;
+
+      // Earth radius in meters
+      let R = 6378137;
+
+      // Calculate the new latitude
+      let newLat = Math.asin(Math.sin(latRad) * Math.cos(distance / R) + Math.cos(latRad) * Math.sin(distance / R) * Math.cos(angle));
+
+      // Calculate the new longitude
+      let newLon = lonRad + Math.atan2(Math.sin(angle) * Math.sin(distance / R) * Math.cos(latRad), Math.cos(distance / R) - Math.sin(latRad) * Math.sin(newLat));
+
+      // Convert the new latitude and longitude from radians to degrees
+      newLat = newLat * 180 / Math.PI;
+      newLon = newLon * 180 / Math.PI;
+
+      return {latitude: newLat, longitude: newLon};
+    }
+
+    function PlanTree() {
       getLocation();
-      if (avClicks!==0) {
+      if (avClicks !== 0) {
         avClicks--;
         const scene = document.querySelector('a-scene');
         const newEntity = document.createElement('a-entity');
         newEntity.setAttribute('material', 'color: green');
         newEntity.setAttribute('geometry', 'primitive: cone; radiusBottom: 1; radiusTop: 0; height: 2');
-        newEntity.setAttribute('gps-new-entity-place', `latitude: ${latitude+0.00001}; longitude: ${longitude+0.00001}`);
+
+        // Get the camera direction
+        const camera = document.querySelector('a-camera');
+        const rotation = camera.object3D.rotation;
+
+        // Calculate the angle in radians
+        let angle = rotation.y;
+
+        // Convert angle from radians to degrees
+        angle = angle * (180 / Math.PI);
+
+        // Calculate the new coordinates (1 meter ahead of the camera)
+        const newCoords = calculateNewCoordinates(latitude, longitude, 1, angle);
+        newEntity.setAttribute('gps-new-entity-place', `latitude: ${newCoords.latitude}; longitude: ${newCoords.longitude}`);
         scene.appendChild(newEntity);
+
         let myButton = document.getElementById("myButton");
-        myButton.value="Plan Tree remaining times:"+avClicks;
+        myButton.value = "Plan Tree remaining times:" + avClicks;
       }
-      if(avClicks===0){
+      if (avClicks === 0) {
         let myButton = document.getElementById("myButton");
-        myButton.style.backgroundColor='grey';
+        myButton.style.backgroundColor = 'grey';
       }
     }
-    window.onload=function (){
+
+    window.onload = function () {
       getLocation();
-      let myButton = document.getElementById("myButton")
-      myButton.value="Plan Tree remaining times:"+avClicks;
+      let myButton = document.getElementById("myButton");
+      myButton.value = "Plan Tree remaining times:" + avClicks;
     }
   </script>
   <style>
